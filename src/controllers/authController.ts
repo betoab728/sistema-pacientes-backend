@@ -23,7 +23,7 @@ export const registerUser = async (req: Request, res: Response) => {
                 _id: user._id,
                 nombre: user.nombre,
                 correo: user.correo,
-                token: generateToken(user._id.toString())
+                token: generateToken(user._id as string)
             });
         } else {
             res.status(400).json({ message: 'Datos de usuario no válidos' });
@@ -44,7 +44,7 @@ export const loginUser = async (req: Request, res: Response) => {
                 _id: user._id,
                 nombre: user.nombre,
                 correo: user.correo,
-                token: generateToken(user._id)
+                token: generateToken(user._id as string)
             });
         } else {
             res.status(401).json({ message: 'Correo o clave no válidos' });
