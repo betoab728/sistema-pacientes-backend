@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 /*import pacienteRoutes from './routes/pacienteRoutes';
 import medicoRoutes from './routes/medicoRoutes';
@@ -47,7 +46,7 @@ class Server {
         });
 
         // Rutas
-        this.app.use('/api/auth', authRoutes);
+   
         this.app.use('/api/users', userRoutes);
         
         /*this.app.use('/api/pacientes', pacienteRoutes);

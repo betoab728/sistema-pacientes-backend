@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-interface IUser extends Document {
+ export interface IUser extends Document {
     nombre: string;
     correo: string;
     clave: string;
@@ -33,16 +33,10 @@ const UserSchema = new Schema<IUser>({
         default: true
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    collection: 'usuarios' // Especificar el nombre de la colección
 });
 
-UserSchema.pre('save', async function(next) {
-    if (!this.isModified('clave')) {
-        next();
-    }
-    const salt = await bcrypt.genSalt(10);
-    this.clave = await bcrypt.hash(this.clave, salt);
-});
 
 UserSchema.methods.matchPassword = async function(enteredPassword: string) {
     return await bcrypt.compare(enteredPassword, this.clave);

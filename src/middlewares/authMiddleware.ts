@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+/*import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel';
 
@@ -23,3 +23,4 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
         res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
+*/

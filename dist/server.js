@@ -15,9 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
-/*import authRoutes from './routes/authRoutes';
-import userRoutes from './routes/userRoutes';
-import pacienteRoutes from './routes/pacienteRoutes';
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+/*import pacienteRoutes from './routes/pacienteRoutes';
 import medicoRoutes from './routes/medicoRoutes';
 import historialClinicoRoutes from './routes/historialClinicoRoutes';
 import informeRoutes from './routes/informeRoutes'; */
@@ -50,12 +49,11 @@ class Server {
             });
         });
         // Rutas
-        /* this.app.use('/api/auth', authRoutes);
-         this.app.use('/api/users', userRoutes);
-         this.app.use('/api/pacientes', pacienteRoutes);
-         this.app.use('/api/medicos', medicoRoutes);
-         this.app.use('/api/historial-clinico', historialClinicoRoutes);
-         this.app.use('/api/informes', informeRoutes); */
+        this.app.use('/api/users', userRoutes_1.default);
+        /*this.app.use('/api/pacientes', pacienteRoutes);
+        this.app.use('/api/medicos', medicoRoutes);
+        this.app.use('/api/historial-clinico', historialClinicoRoutes);
+        this.app.use('/api/informes', informeRoutes); */
     }
     database() {
         return __awaiter(this, void 0, void 0, function* () {

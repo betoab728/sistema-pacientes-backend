@@ -1,12 +1,24 @@
 import { Request, Response } from 'express';
-import User from '../models/userModel';
-import bcrypt from 'bcrypt';
+import {
+    getUsersService,
+    createUserService,
+    updateUserService,
+    loginUserService
+} from '../services/userService';
 
 // Obtener todos los usuarios
 export const getUsers = async (req: Request, res: Response) => {
     try {
-        const users = await User.find().select('-clave'); // No devolver el campo de contraseña
-        res.json(users);
+        const users = await getUsersService();
+      
+        if (users.length === 0) {
+            // Si no hay usuarios encontrados, puedes enviar una respuesta 404
+            res.status(404).json({ message: 'No se encontraron usuarios' });
+        } else {
+            // Si se encontraron usuarios, enviar la lista de usuarios
+            res.status(200).json(users);
+        }
+
     } catch (error) {
         res.status(500).json({ message: 'Error fetching users' });
     }
@@ -14,75 +26,52 @@ export const getUsers = async (req: Request, res: Response) => {
 
 // Crear un nuevo usuario
 export const createUser = async (req: Request, res: Response) => {
-    const { nombre, correo, clave, activo = true } = req.body;
+    const { nombre, correo, clave } = req.body;
 
     try {
-        // Validar que el correo no esté ya en uso
-        const userExists = await User.findOne({ correo });
-        if (userExists) {
-            return res.status(400).json({ message: 'Correo ya en uso' });
-        }
-
-        // Encriptar la contraseña
-        const hashedPassword = await bcrypt.hash(clave, 10);
-
-        // Crear el nuevo usuario
-        const newUser = new User({
-            nombre,
-            correo,
-            clave: hashedPassword,
-            activo
-        });
-
-        // Guardar el usuario en la base de datos
-        await newUser.save();
-
-        // No devolver el campo de contraseña en la respuesta
-        const userToReturn = {
-            _id: newUser._id,
-            nombre: newUser.nombre,
-            correo: newUser.correo,
-            fechaRegistro: newUser.fechaRegistro,
-            activo: newUser.activo
-        };
-
-        res.status(201).json(userToReturn);
+        const user = await createUserService(nombre, correo, clave);
+        res.status(201).json(user); // 201 Created
     } catch (error) {
-        res.status(500).json({ message: 'Error creando usuario' });
+        if (error instanceof Error) {
+            res.status(400).json({ message: 'Error creating user: ' + error.message });
+        } else {
+            res.status(400).json({ message: 'Error creating user' });
+        }
     }
 };
 
-// Actualizar un usuario
+// Actualizar un usuario existente
 export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { nombre, correo, clave, activo } = req.body;
+    const updateData = req.body;
 
     try {
-        const user = await User.findById(id);
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        user.nombre = nombre || user.nombre;
-        user.correo = correo || user.correo;
-        user.activo = typeof activo !== 'undefined' ? activo : user.activo;
-
-        if (clave) {
-            user.clave = await bcrypt.hash(clave, 10);
-        }
-
-        await user.save();
-
-        res.json({
-            _id: user._id,
-            nombre: user.nombre,
-            correo: user.correo,
-            fechaRegistro: user.fechaRegistro,
-            activo: user.activo
-        });
+        const user = await updateUserService(id,updateData);
+        res.status(200).json(user); // 200 OK
     } catch (error) {
-        res.status(500).json({ message: 'Error actualizando usuario' });
-      
+        if (error instanceof Error) {
+            res.status(400).json({ message: 'Error updating user: ' + error.message });
+        } else {
+            res.status(400).json({ message: 'Error updating user' });
+        }
+    }
+};
+
+// Iniciar sesión de usuario
+export const loginUser = async (req: Request, res: Response) => {
+    const { correo, clave } = req.body;
+
+    try {
+        const user = await loginUserService(correo, clave);
+        res.status(200).json(user); // 200 OK
+    } catch (error: any) {
+         // Manejar errores específicos
+         if (error.message === 'Correo no válido') {
+            res.status(404).json({ message: 'Correo no encontrado' });
+        } else if (error.message === 'Clave no válida') {
+            res.status(401).json({ message: 'Clave incorrecta' });
+        } else {
+            res.status(500).json({ message: 'Error interno del servidor' });
+        }
     }
 };
