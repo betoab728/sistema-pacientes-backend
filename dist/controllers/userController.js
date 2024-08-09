@@ -9,12 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.updateUser = exports.createUser = exports.getUsers = void 0;
+exports.loginUser = exports.updateUser = exports.getUserById = exports.createUser = exports.getUsers = void 0;
 const userService_1 = require("../services/userService");
 // Obtener todos los usuarios
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield (0, userService_1.getUsersService)();
+        console.log("Solicitud recibida en getUsers con usuarios:", users);
         if (users.length === 0) {
             // Si no hay usuarios encontrados, puedes enviar una respuesta 404
             res.status(404).json({ message: 'No se encontraron usuarios' });
@@ -46,6 +47,24 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createUser = createUser;
+// Obtener un usuario por ID
+const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Solicitud recibida en getUserById con ID:", req.params.id);
+    const { id } = req.params;
+    try {
+        const user = yield (0, userService_1.getUserByIdService)(id);
+        res.status(200).json(user); // 200 OK
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            res.status(404).json({ message: 'User not found: ' + error.message });
+        }
+        else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    }
+});
+exports.getUserById = getUserById;
 // Actualizar un usuario existente
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -66,6 +85,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.updateUser = updateUser;
 // Iniciar sesión de usuario
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Solicitud recibida en loginUser con datos:", req.body);
     const { correo, clave } = req.body;
     try {
         const user = yield (0, userService_1.loginUserService)(correo, clave);

@@ -3,88 +3,112 @@ import bcrypt from 'bcryptjs';
 import generateToken from '../config/jwt';
 import { IUser } from '../models/userModel';
 
+// Obtener todos los usuarios
 export const getUsersService = async () => {
-    return await User.find().select('-clave'); // No devolver la clave
+    try {
+        return await User.find().select('-clave'); // No devolver la clave
+    } catch (error) {
+        throw new Error('Error al obtener usuarios: ' + (error as Error).message);
+    }
 };
 
-export const createUserService  = async (nombre: string, correo: string, clave: string) => {
-    const userExists = await User.findOne({ correo });
+// Crear un nuevo usuario
+export const createUserService = async (nombre: string, correo: string, clave: string) => {
+    try {
+        const userExists = await User.findOne({ correo });
 
-    if (userExists) {
-        throw new Error('El usuario ya existe');
-    }
+        if (userExists) {
+            throw new Error('El usuario ya existe');
+        }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(clave, salt);
-
-    const user = new User({
-        nombre,
-        correo,
-        clave: hashedPassword, // Asegúrate de usar el campo correcto para la clave
-        activo: true, // Valor predeterminado
-        fechaRegistro: new Date()
-    });
-
-    await user.save();
-
-    return {
-      
-        nombre: user.nombre,
-        correo: user.correo,
-        fechaRegistro: user.fechaRegistro
-    };
-};
-
-
-export const updateUserService = async (userId: string, updateData: Partial<IUser>) => {
-
-    const user = await User.findById(userId);
-
-
-    if (!user) {
-        throw new Error('Usuario no encontrado');
-    }
-    const { nombre, correo, clave, activo } = updateData;
-    user.nombre = nombre || user.nombre;
-    user.correo = correo || user.correo;
-    user.activo = typeof activo !== 'undefined' ? activo : user.activo;
-
-    if (clave) {
         const salt = await bcrypt.genSalt(10);
-        user.clave = await bcrypt.hash(clave, salt);
+        const hashedPassword = await bcrypt.hash(clave, salt);
+
+        const user = new User({
+            nombre,
+            correo,
+            clave: hashedPassword,
+            activo: true,
+            fechaRegistro: new Date()
+        });
+
+        await user.save();
+
+        return {
+            nombre: user.nombre,
+            correo: user.correo,
+            fechaRegistro: user.fechaRegistro
+        };
+    } catch (error) {
+        throw new Error('Error al crear usuario: ' + (error as Error).message);
     }
-
-    await user.save();
-
-    return {
-        _id: user._id,
-        nombre: user.nombre,
-        correo: user.correo,
-        fechaRegistro: user.fechaRegistro,
-        activo: user.activo
-    };
 };
 
-export const loginUserService = async (correo: string, clave: string) => {
-      // Buscar usuario por correo
-      const user = await User.findOne({ correo });
+// Obtener un usuario por ID
+export const getUserByIdService = async (userId: string) => {
+    try {
+        const user = await User.findById(userId).select('-clave');
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+        return user;
+    } catch (error) {
+        throw new Error('Error al obtener usuario por ID: ' + (error as Error).message);
+    }
+};
 
-      // Si no se encuentra el usuario, lanzar error
-      if (!user) {
-          throw new Error('Correo válido');
-      }
+// Actualizar un usuario
+export const updateUserService = async (userId: string, updateData: Partial<IUser>) => {
+    try {
+        const user = await User.findById(userId);
 
-      const isMatch = await user.matchPassword(clave);
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
 
-      if (isMatch) {
+        const { nombre, correo, activo } = updateData;
+        user.nombre = nombre || user.nombre;
+        user.correo = correo || user.correo;
+        user.activo = typeof activo !== 'undefined' ? activo : user.activo;
+
+        // La clave no se actualiza aquí
+
+        await user.save();
+
         return {
-            "message": "Usuario autenticado correctamente",
             _id: user._id,
-            nombre:  user.nombre,
+            nombre: user.nombre,
             correo: user.correo,
-            token: generateToken(user._id as string)
+            fechaRegistro: user.fechaRegistro,
+            activo: user.activo
         };
-    } else {
-        throw new Error('clave no valida');
+    } catch (error) {
+        throw new Error('Error al actualizar usuario: ' + (error as Error).message);
+    }
+};
+// Login de usuario
+export const loginUserService = async (correo: string, clave: string) => {
+    try {
+        const user = await User.findOne({ correo });
+
+        if (!user) {
+            throw new Error('Correo no válido');
+        }
+
+        const isMatch = await user.matchPassword(clave);
+
+        if (isMatch) {
+            return {
+                message: 'Usuario autenticado correctamente',
+                _id: user._id,
+                nombre: user.nombre,
+                correo: user.correo,
+                token: generateToken(user._id as string)
+            };
+        } else {
+            throw new Error('Clave no válida');
+        }
+    } catch (error) {
+        throw new Error('Error en el login de usuario: ' + (error as Error).message);
     }
 };

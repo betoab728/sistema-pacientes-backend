@@ -16,6 +16,8 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const jobRoutes_1 = __importDefault(require("./routes/jobRoutes"));
+const patientRoutes_1 = __importDefault(require("./routes/patientRoutes"));
 /*import pacienteRoutes from './routes/pacienteRoutes';
 import medicoRoutes from './routes/medicoRoutes';
 import historialClinicoRoutes from './routes/historialClinicoRoutes';
@@ -49,11 +51,13 @@ class Server {
             });
         });
         // Rutas
-        this.app.use('/api/users', userRoutes_1.default);
-        /*this.app.use('/api/pacientes', pacienteRoutes);
-        this.app.use('/api/medicos', medicoRoutes);
-        this.app.use('/api/historial-clinico', historialClinicoRoutes);
-        this.app.use('/api/informes', informeRoutes); */
+        this.app.use('/usuarios', userRoutes_1.default); // Para usuarios
+        //ruta para trabajos o jobs
+        this.app.use('/jobs', jobRoutes_1.default);
+        this.app.use('/patients', patientRoutes_1.default); // Para pacientes
+        //this.app.use('/medicos', medicoRoutes);      // Para médicos
+        //this.app.use('/historial-clinico', historialClinicoRoutes); // Para historiales clínicos
+        //this.app.use('/informes', informeRoutes);    // Para informes*/
     }
     database() {
         return __awaiter(this, void 0, void 0, function* () {

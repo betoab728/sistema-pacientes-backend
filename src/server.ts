@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes';
+import jobRoutes from './routes/jobRoutes';
+import patientRoutes from './routes/patientRoutes';
 /*import pacienteRoutes from './routes/pacienteRoutes';
 import medicoRoutes from './routes/medicoRoutes';
 import historialClinicoRoutes from './routes/historialClinicoRoutes';
@@ -46,13 +48,13 @@ class Server {
         });
 
         // Rutas
-   
-        this.app.use('/api/users', userRoutes);
-        
-        /*this.app.use('/api/pacientes', pacienteRoutes);
-        this.app.use('/api/medicos', medicoRoutes);
-        this.app.use('/api/historial-clinico', historialClinicoRoutes);
-        this.app.use('/api/informes', informeRoutes); */
+        this.app.use('/usuarios', userRoutes);        // Para usuarios
+       //ruta para trabajos o jobs
+        this.app.use('/jobs', jobRoutes); 
+       this.app.use('/patients', patientRoutes);  // Para pacientes
+          //this.app.use('/medicos', medicoRoutes);      // Para médicos
+          //this.app.use('/historial-clinico', historialClinicoRoutes); // Para historiales clínicos
+          //this.app.use('/informes', informeRoutes);    // Para informes*/
     }
 
     async database() {

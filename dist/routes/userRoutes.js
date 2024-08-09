@@ -7,4 +7,6 @@ router.get('/', userController_1.getUsers);
 router.post('/', userController_1.createUser);
 router.put('/:id', userController_1.updateUser);
 router.post('/login', userController_1.loginUser);
+// Se agrega la ruta para obtener un usuario por ID getUserById
+router.get('/:id', userController_1.getUserById);
 exports.default = router;

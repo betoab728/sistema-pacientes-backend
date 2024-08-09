@@ -3,13 +3,15 @@ import {
     getUsersService,
     createUserService,
     updateUserService,
-    loginUserService
+    loginUserService,
+    getUserByIdService
 } from '../services/userService';
 
 // Obtener todos los usuarios
 export const getUsers = async (req: Request, res: Response) => {
     try {
         const users = await getUsersService();
+        console.log("Solicitud recibida en getUsers con usuarios:", users);
       
         if (users.length === 0) {
             // Si no hay usuarios encontrados, puedes enviar una respuesta 404
@@ -40,6 +42,24 @@ export const createUser = async (req: Request, res: Response) => {
     }
 };
 
+// Obtener un usuario por ID
+export const getUserById = async (req: Request, res: Response) => {
+    
+    console.log("Solicitud recibida en getUserById con ID:", req.params.id);
+    const { id } = req.params;
+
+    try {
+        const user = await getUserByIdService(id);
+        res.status(200).json(user); // 200 OK
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(404).json({ message: 'User not found: ' + error.message });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    }
+};
+
 // Actualizar un usuario existente
 export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -59,6 +79,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 // Iniciar sesión de usuario
 export const loginUser = async (req: Request, res: Response) => {
+    console.log("Solicitud recibida en loginUser con datos:", req.body);
     const { correo, clave } = req.body;
 
     try {
