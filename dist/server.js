@@ -18,6 +18,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const jobRoutes_1 = __importDefault(require("./routes/jobRoutes"));
 const patientRoutes_1 = __importDefault(require("./routes/patientRoutes"));
+const doctorRoutes_1 = __importDefault(require("./routes/doctorRoutes"));
+const appointmentRoutes_1 = __importDefault(require("./routes/appointmentRoutes"));
 /*import pacienteRoutes from './routes/pacienteRoutes';
 import medicoRoutes from './routes/medicoRoutes';
 import historialClinicoRoutes from './routes/historialClinicoRoutes';
@@ -55,7 +57,8 @@ class Server {
         //ruta para trabajos o jobs
         this.app.use('/jobs', jobRoutes_1.default);
         this.app.use('/patients', patientRoutes_1.default); // Para pacientes
-        //this.app.use('/medicos', medicoRoutes);      // Para médicos
+        this.app.use('/doctors', doctorRoutes_1.default); // Para médicos
+        this.app.use('/appointments', appointmentRoutes_1.default); // Para citas
         //this.app.use('/historial-clinico', historialClinicoRoutes); // Para historiales clínicos
         //this.app.use('/informes', informeRoutes);    // Para informes*/
     }

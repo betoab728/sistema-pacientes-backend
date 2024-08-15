@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateJobService = exports.getJobByIdService = exports.createJobService = exports.getJobsService = void 0;
+exports.getJobByIdService = exports.updateJobService = exports.createJobService = exports.getJobsService = void 0;
 // se implementa el servicio para gestionar los trabajos
 const jobModel_1 = __importDefault(require("../models/jobModel"));
 //Obtener todos los trabajos
@@ -37,6 +37,8 @@ const createJobService = (name) => __awaiter(void 0, void 0, void 0, function* (
         });
         yield job.save();
         return {
+            //se incluye el id
+            _id: job._id,
             name: job.name
         };
     }
@@ -45,6 +47,20 @@ const createJobService = (name) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.createJobService = createJobService;
+//Actualizar un trabajo por ID
+const updateJobService = (jobId, updateData) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const updatedJob = yield jobModel_1.default.findByIdAndUpdate(jobId, updateData, { new: true });
+        if (!updatedJob) {
+            throw new Error('Paciente no encontrado');
+        }
+        return updatedJob;
+    }
+    catch (error) {
+        throw new Error('Error al actualizar trabajo: ' + error.message);
+    }
+});
+exports.updateJobService = updateJobService;
 //Obtener un trabajo por ID
 const getJobByIdService = (jobId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -59,19 +75,4 @@ const getJobByIdService = (jobId) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getJobByIdService = getJobByIdService;
-//Actualizar un trabajo por ID
-const updateJobService = (jobId, updateData) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const job = yield jobModel_1.default.findById(jobId);
-        if (!job) {
-            throw new Error('Trabajo no encontrado');
-        }
-        yield job.updateOne(updateData);
-        return job;
-    }
-    catch (error) {
-        throw new Error('Error al actualizar trabajo: ' + error.message);
-    }
-});
-exports.updateJobService = updateJobService;
 //fin de la implementacion de los servicios para gestionar los trabajos

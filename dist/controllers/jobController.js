@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateJob = exports.getJobById = exports.createJob = exports.getJobs = void 0;
+exports.getJobById = exports.updateJob = exports.createJob = exports.getJobs = void 0;
 const jobService_1 = require("../services/jobService");
 //Obtener todos los trabajos
 const getJobs = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -33,6 +33,7 @@ const createJob = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.body;
     try {
         const job = yield (0, jobService_1.createJobService)(name);
+        console.log('Created job:', job);
         res.status(201).json(job);
     }
     catch (error) {
@@ -45,24 +46,6 @@ const createJob = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.createJob = createJob;
-//Obtener un trabajo por ID
-const getJobById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Solicitud recibida en getJobById con ID:", req.params.id);
-    const { id } = req.params;
-    try {
-        const job = yield (0, jobService_1.getJobByIdService)(id);
-        res.status(200).json(job);
-    }
-    catch (error) {
-        if (error instanceof Error) {
-            res.status(404).json({ message: 'Job not found: ' + error.message });
-        }
-        else {
-            res.status(404).json({ message: 'Job not found' });
-        }
-    }
-});
-exports.getJobById = getJobById;
 //Actualizar un trabajo por ID
 const updateJob = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -81,4 +64,22 @@ const updateJob = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.updateJob = updateJob;
+//Obtener un trabajo por ID
+const getJobById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Solicitud recibida en getJobById con ID:", req.params.id);
+    const { id } = req.params;
+    try {
+        const job = yield (0, jobService_1.getJobByIdService)(id);
+        res.status(200).json(job);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            res.status(404).json({ message: 'Job not found: ' + error.message });
+        }
+        else {
+            res.status(404).json({ message: 'Job not found' });
+        }
+    }
+});
+exports.getJobById = getJobById;
 //fin de la implementacion de los controladores para gestionar los trabajos

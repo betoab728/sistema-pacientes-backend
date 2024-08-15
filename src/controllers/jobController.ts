@@ -25,27 +25,13 @@ export const createJob = async (req: Request, res: Response) => {
     const { name } = req.body;
     try {
         const job = await createJobService(name);
+        console.log('Created job:', job); 
         res.status(201).json(job);
     } catch (error) {
         if (error instanceof Error) {
             res.status(400).json({ message: 'Error creating job: ' + error.message });
         } else {
             res.status(400).json({ message: 'Error creating job' });
-        }
-    }
-};
-//Obtener un trabajo por ID
-export const getJobById = async (req: Request, res: Response) => {
-    console.log("Solicitud recibida en getJobById con ID:", req.params.id);
-    const { id } = req.params;
-    try {
-        const job = await getJobByIdService(id);
-        res.status(200).json(job);
-    } catch (error) {
-        if (error instanceof Error) {
-            res.status(404).json({ message: 'Job not found: ' + error.message });
-        } else {
-            res.status(404).json({ message: 'Job not found' });
         }
     }
 };
@@ -64,4 +50,20 @@ export const updateJob = async (req: Request, res: Response) => {
         }
     }
 };
+//Obtener un trabajo por ID
+export const getJobById = async (req: Request, res: Response) => {
+    console.log("Solicitud recibida en getJobById con ID:", req.params.id);
+    const { id } = req.params;
+    try {
+        const job = await getJobByIdService(id);
+        res.status(200).json(job);
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(404).json({ message: 'Job not found: ' + error.message });
+        } else {
+            res.status(404).json({ message: 'Job not found' });
+        }
+    }
+};
+
 //fin de la implementacion de los controladores para gestionar los trabajos

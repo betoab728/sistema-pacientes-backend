@@ -21,12 +21,26 @@ import { IJob } from '../models/jobModel';
             });
             await job.save();
             return {
+                //se incluye el id
+                _id: job._id,
                 name: job.name
             };
         } catch (error) {
             throw new Error('Error al crear trabajo: ' + (error as Error).message);
         }
     }
+    //Actualizar un trabajo por ID
+    export const updateJobService = async (jobId: string, updateData: Partial<IJob>) => {
+        try {
+            const updatedJob = await Job.findByIdAndUpdate(jobId, updateData, { new: true });
+            if (!updatedJob) {
+                throw new Error('Paciente no encontrado');
+            }
+              return updatedJob;
+        } catch (error) {
+            throw new Error('Error al actualizar trabajo: ' + (error as Error).message);
+        }
+    }  
     //Obtener un trabajo por ID
     export const getJobByIdService = async (jobId: string) => {
         try {
@@ -39,17 +53,5 @@ import { IJob } from '../models/jobModel';
             throw new Error('Error al obtener trabajo por ID: ' + (error as Error).message);
         }
     }
-    //Actualizar un trabajo por ID
-    export const updateJobService = async (jobId: string, updateData: Partial<IJob>) => {
-        try {
-            const job = await Job.findById(jobId);
-            if (!job) {
-                throw new Error('Trabajo no encontrado');
-            }
-            await job.updateOne(updateData);
-            return job;
-        } catch (error) {
-            throw new Error('Error al actualizar trabajo: ' + (error as Error).message);
-        }
-    }   
+     
 //fin de la implementacion de los servicios para gestionar los trabajos
