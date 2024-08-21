@@ -6,11 +6,9 @@ import jobRoutes from './routes/jobRoutes';
 import patientRoutes from './routes/patientRoutes';
 import doctorRoutes from './routes/doctorRoutes';
 import appointmentRoutes from './routes/appointmentRoutes';
-/*import pacienteRoutes from './routes/pacienteRoutes';
-import medicoRoutes from './routes/medicoRoutes';
-import historialClinicoRoutes from './routes/historialClinicoRoutes';
-import informeRoutes from './routes/informeRoutes'; */
 import dbConnection from './config/db';
+//para las historias clinicas
+import clinicalHistoryRoutes from './routes/clinicalHistoryRoutes';
 
 dotenv.config();
 
@@ -56,8 +54,8 @@ class Server {
         this.app.use('/patients', patientRoutes);  // Para pacientes
         this.app.use('/doctors', doctorRoutes);      // Para médicos
         this.app.use('/appointments', appointmentRoutes);      // Para citas
-          //this.app.use('/historial-clinico', historialClinicoRoutes); // Para historiales clínicos
-          //this.app.use('/informes', informeRoutes);    // Para informes*/
+        //ruta para historias clinicas
+        this.app.use('/clinicalHistories', clinicalHistoryRoutes);
     }
 
     async database() {

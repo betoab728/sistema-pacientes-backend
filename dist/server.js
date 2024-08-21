@@ -20,11 +20,9 @@ const jobRoutes_1 = __importDefault(require("./routes/jobRoutes"));
 const patientRoutes_1 = __importDefault(require("./routes/patientRoutes"));
 const doctorRoutes_1 = __importDefault(require("./routes/doctorRoutes"));
 const appointmentRoutes_1 = __importDefault(require("./routes/appointmentRoutes"));
-/*import pacienteRoutes from './routes/pacienteRoutes';
-import medicoRoutes from './routes/medicoRoutes';
-import historialClinicoRoutes from './routes/historialClinicoRoutes';
-import informeRoutes from './routes/informeRoutes'; */
 const db_1 = __importDefault(require("./config/db"));
+//para las historias clinicas
+const clinicalHistoryRoutes_1 = __importDefault(require("./routes/clinicalHistoryRoutes"));
 dotenv_1.default.config();
 class Server {
     constructor() {
@@ -59,8 +57,8 @@ class Server {
         this.app.use('/patients', patientRoutes_1.default); // Para pacientes
         this.app.use('/doctors', doctorRoutes_1.default); // Para médicos
         this.app.use('/appointments', appointmentRoutes_1.default); // Para citas
-        //this.app.use('/historial-clinico', historialClinicoRoutes); // Para historiales clínicos
-        //this.app.use('/informes', informeRoutes);    // Para informes*/
+        //ruta para historias clinicas
+        this.app.use('/clinicalHistories', clinicalHistoryRoutes_1.default);
     }
     database() {
         return __awaiter(this, void 0, void 0, function* () {
