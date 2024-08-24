@@ -1,9 +1,10 @@
 /*se crea el modelo del hisotrial clinico de un paciente*/
 import { Schema, model, Document } from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface IClinicalHistory extends Document {
-    patientId: string;
-    doctorId: string;
+    patientId: mongoose.Types.ObjectId;
+    doctorId: mongoose.Types.ObjectId;
     date: Date;
     hour: string;
     symptoms: string;
@@ -16,11 +17,13 @@ export interface IClinicalHistory extends Document {
 //definir el esquema de cita medica
 const ClinicalHistorySchema = new Schema<IClinicalHistory>({
     patientId: {
-        type: String,
+        type:  mongoose.Schema.Types.ObjectId,
+        ref: 'Patient',
         required: true
     },
     doctorId: {
-        type: String,
+        type:  mongoose.Schema.Types.ObjectId,
+        ref: 'Doctor',
         required: true
     },
     date: {

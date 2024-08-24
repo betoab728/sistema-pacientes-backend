@@ -27,8 +27,31 @@ exports.getClinicalHistoriesService = getClinicalHistoriesService;
 //obtener una historia clinica por id
 const getClinicalHistoryByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const clinicalHistory = yield clinicalHistoryModel_1.ClinicalHistory.findById(id);
-        return clinicalHistory;
+        const clinicalHistory = yield clinicalHistoryModel_1.ClinicalHistory.findById(id)
+            .populate('doctorId', 'name paternalSurname maternalSurname')
+            .populate('patientId', 'name paternalSurname maternalSurname');
+        if (!clinicalHistory) {
+            throw new Error('Historia clinica no encontrada');
+        }
+        const doctor = clinicalHistory.doctorId;
+        // Mapear para incluir el nombre completo del doctor en el resultado
+        return {
+            _id: clinicalHistory._id,
+            patientId: clinicalHistory.patientId ? clinicalHistory.patientId._id : 'N/A',
+            patient: clinicalHistory.patientId
+                ? `${clinicalHistory.patientId.name} ${clinicalHistory.patientId.paternalSurname} ${clinicalHistory.patientId.maternalSurname}`
+                : 'N/A',
+            doctor: clinicalHistory.doctorId
+                ? `${clinicalHistory.doctorId.name} ${clinicalHistory.doctorId.paternalSurname} ${clinicalHistory.doctorId.maternalSurname}`
+                : 'N/A',
+            date: clinicalHistory.date,
+            hour: clinicalHistory.hour,
+            symptoms: clinicalHistory.symptoms,
+            diagnosis: clinicalHistory.diagnosis,
+            tests: clinicalHistory.tests,
+            treatment: clinicalHistory.treatment,
+            notes: clinicalHistory.notes
+        };
     }
     catch (error) {
         throw new Error('Error al obtener historia clinica: ' + error.message);
@@ -72,8 +95,24 @@ exports.deleteClinicalHistoryService = deleteClinicalHistoryService;
 //listar las historias clinicas de un paciente por id y ordenarlas por fecha de creacion descendente
 const getClinicalHistoriesByPatientIdService = (patientId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const clinicalHistories = yield clinicalHistoryModel_1.ClinicalHistory.find({ patientId }).sort({ createdAt: -1 });
-        return clinicalHistories;
+        const clinicalHistories = yield clinicalHistoryModel_1.ClinicalHistory.find({ patientId })
+            .populate('patientId', 'name paternalSurname maternalSurname')
+            .sort({ createdAt: -1 });
+        // Mapear para incluir el nombre completo del paciente en el resultado
+        return clinicalHistories.map(history => ({
+            _id: history._id,
+            patient: history.patientId
+                ? `${history.patientId.name} ${history.patientId.paternalSurname} ${history.patientId.maternalSurname}`
+                : 'N/A',
+            doctorId: history.doctorId,
+            date: history.date,
+            hour: history.hour,
+            symptoms: history.symptoms,
+            diagnosis: history.diagnosis,
+            tests: history.tests,
+            treatment: history.treatment,
+            notes: history.notes
+        }));
     }
     catch (error) {
         throw new Error('Error al obtener historias clinicas: ' + error.message);

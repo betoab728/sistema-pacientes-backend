@@ -1,16 +1,22 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClinicalHistory = void 0;
 /*se crea el modelo del hisotrial clinico de un paciente*/
 const mongoose_1 = require("mongoose");
+const mongoose_2 = __importDefault(require("mongoose"));
 //definir el esquema de cita medica
 const ClinicalHistorySchema = new mongoose_1.Schema({
     patientId: {
-        type: String,
+        type: mongoose_2.default.Schema.Types.ObjectId,
+        ref: 'Patient',
         required: true
     },
     doctorId: {
-        type: String,
+        type: mongoose_2.default.Schema.Types.ObjectId,
+        ref: 'Doctor',
         required: true
     },
     date: {
