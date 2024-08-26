@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAppointmentStatus = exports.getAppointmentsByDate = exports.deleteAppointment = exports.updateAppointment = exports.getAppointmentById = exports.createAppointment = exports.getAppointments = void 0;
+exports.getAppointmentsReport = exports.updateAppointmentStatus = exports.getAppointmentsByDate = exports.deleteAppointment = exports.updateAppointment = exports.getAppointmentById = exports.createAppointment = exports.getAppointments = void 0;
+const appointmentReportService_1 = require("../services/appointmentReportService");
 const appointmentService_1 = require("../services/appointmentService");
 //obtener todas las citas medicas
 const getAppointments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -93,9 +94,15 @@ const deleteAppointment = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.deleteAppointment = deleteAppointment;
 //obtener citas medicas por fecha desde y hasta
 const getAppointmentsByDate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { from, to } = req.query;
+    const { from, to } = req.params;
     try {
-        const appointments = yield (0, appointmentService_1.getAppointmentsByDateService)(new Date(from), new Date(to));
+        const fromDate = new Date(from);
+        const toDate = new Date(to);
+        // Verificar si las fechas son válidas
+        if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+            return res.status(400).json({ message: 'Las fechas proporcionadas no son válidas.' });
+        }
+        const appointments = yield (0, appointmentService_1.getAppointmentsByDateService)(fromDate, toDate);
         res.status(200).json(appointments);
     }
     catch (error) {
@@ -121,4 +128,19 @@ const updateAppointmentStatus = (req, res) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.updateAppointmentStatus = updateAppointmentStatus;
+const getAppointmentsReport = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { from, to } = req.params;
+        if (!from || !to) {
+            return res.status(400).send('Las fechas "from" y "to" son requeridas.');
+        }
+        const fromDate = new Date(from);
+        const toDate = new Date(to);
+        yield (0, appointmentReportService_1.generateAppointmentsReportPDF)(fromDate, toDate, res);
+    }
+    catch (error) {
+        res.status(500).send('Error al generar el informe: ' + error.message);
+    }
+});
+exports.getAppointmentsReport = getAppointmentsReport;
 //fin de la implementacion del controlador de citas medicas

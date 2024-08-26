@@ -111,7 +111,23 @@ const getAppointmentsByDateService = (from, to) => __awaiter(void 0, void 0, voi
         throw new Error('The "from" date cannot be after the "to" date');
     }
     try {
-        return yield appointmentModel_1.Appointment.find({ date: { $gte: from, $lte: to } });
+        console.log('from y to', from, to);
+        const appointments = yield appointmentModel_1.Appointment.find({ date: { $gte: from, $lte: to } })
+            .populate('patientID', 'name paternalSurname maternalSurname') // Incluye los apellidos del paciente
+            .populate('doctorID', 'name paternalSurname maternalSurname'); // Incluye los apellidos del doctor;
+        return appointments.map(appointment => ({
+            _id: appointment._id,
+            date: appointment.date,
+            hour: appointment.hour,
+            patient: appointment.patientID
+                ? `${appointment.patientID.name} ${appointment.patientID.paternalSurname} ${appointment.patientID.maternalSurname}`
+                : 'N/A',
+            doctor: appointment.doctorID
+                ? `${appointment.doctorID.name} ${appointment.doctorID.paternalSurname} ${appointment.doctorID.maternalSurname}`
+                : 'N/A',
+            office: appointment.office,
+            status: appointment.status,
+        }));
     }
     catch (error) {
         throw new Error('Error al obtener citas medicas por fecha: ' + error.message);

@@ -108,7 +108,26 @@ export const getAppointmentsByDateService = async (from: Date, to: Date) => {
     }
 
     try {
-        return await Appointment.find({ date: { $gte: from, $lte: to } });
+        console.log('from y to', from , to);
+        const appointments= await Appointment.find({ date: { $gte: from, $lte: to } })
+        .populate('patientID', 'name paternalSurname maternalSurname') // Incluye los apellidos del paciente
+        .populate('doctorID', 'name paternalSurname maternalSurname'); // Incluye los apellidos del doctor;
+
+        return appointments.map(appointment => ({
+            _id: appointment._id,
+            date: appointment.date,
+            hour: appointment.hour,
+            patient: appointment.patientID 
+                ? `${(appointment.patientID as any).name} ${(appointment.patientID as any).paternalSurname} ${(appointment.patientID as any).maternalSurname}` 
+                : 'N/A',
+            doctor: appointment.doctorID 
+                ? `${(appointment.doctorID as any).name} ${(appointment.doctorID as any).paternalSurname} ${(appointment.doctorID as any).maternalSurname}` 
+                : 'N/A',
+            office: appointment.office,
+            status: appointment.status,
+        }));
+
+
     } catch (error) {
         throw new Error('Error al obtener citas medicas por fecha: ' + (error as Error).message);
     }

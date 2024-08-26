@@ -99,9 +99,14 @@ const getClinicalHistoriesByPatientId = (req, res) => __awaiter(void 0, void 0, 
     try {
         const clinicalHistories = yield (0, clinicalHistoryService_1.getClinicalHistoriesByPatientIdService)(patientId);
         if (clinicalHistories.length === 0) {
-            res.status(404).json({ message: 'No se encontraron historias clinicas' });
+            // Devuelve un 200 con un mensaje y un array vacío
+            res.status(200).json({
+                message: 'El paciente no tiene historial de visitas.',
+                data: []
+            });
         }
         else {
+            // Devuelve un 200 con los datos encontrados
             res.status(200).json(clinicalHistories);
         }
     }

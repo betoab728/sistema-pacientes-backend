@@ -3,7 +3,9 @@
 //importar express
 import { Router } from 'express';
 //importar los controladores de citas medicas
-import { getAppointments, getAppointmentById, createAppointment, updateAppointment, getAppointmentsByDate,updateAppointmentStatus  } from '../controllers/appointmentController';
+import { getAppointments, getAppointmentById, createAppointment, updateAppointment, getAppointmentsByDate,updateAppointmentStatus
+    ,getAppointmentsReport
+  } from '../controllers/appointmentController';
 
 const router = Router();
 
@@ -13,5 +15,7 @@ router.get('/:id', getAppointmentById);
 router.put('/:id', updateAppointment);
 router.put('/status/:id', updateAppointmentStatus);
 router.get('/date/:from/:to', getAppointmentsByDate);
+router.get('/report/:from/:to', getAppointmentsReport);
+
 
 export default router;
