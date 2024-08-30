@@ -3,11 +3,10 @@ import { getUsers, createUser,updateUser,loginUser, getUserById } from '../contr
 
 const router = Router();
 
-router.get('/', getUsers);
+router.post('/login', loginUser);
 router.post('/', createUser);
 router.put('/:id', updateUser);
-router.post('/login', loginUser);
-// Se agrega la ruta para obtener un usuario por ID getUserById
 router.get('/:id', getUserById);
+router.get('/', getUsers);
 
 export default router;
