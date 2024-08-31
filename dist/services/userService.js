@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUserService = exports.updateUserService = exports.createUserService = exports.getUsersService = void 0;
+exports.loginUserService = exports.updateUserService = exports.getUserByIdService = exports.createUserService = exports.getUsersService = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jwt_1 = __importDefault(require("../config/jwt"));
@@ -55,17 +55,19 @@ const createUserService = (nombre, correo, clave) => __awaiter(void 0, void 0, v
 });
 exports.createUserService = createUserService;
 // Obtener un usuario por ID
-/*export const getUserByIdService = async (userId: string) => {
+const getUserByIdService = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = await User.findById(userId).select('-clave');
+        const user = yield userModel_1.default.findById(userId).select('-clave');
         if (!user) {
             throw new Error('Usuario no encontrado');
         }
         return user;
-    } catch (error) {
-        throw new Error('Error al obtener usuario por ID: ' + (error as Error).message);
     }
-};*/
+    catch (error) {
+        throw new Error('Error al obtener usuario por ID: ' + error.message);
+    }
+});
+exports.getUserByIdService = getUserByIdService;
 // Actualizar un usuario
 const updateUserService = (userId, updateData) => __awaiter(void 0, void 0, void 0, function* () {
     try {

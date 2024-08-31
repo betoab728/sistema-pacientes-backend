@@ -45,7 +45,7 @@ export const createUserService = async (nombre: string, correo: string, clave: s
 };
 
 // Obtener un usuario por ID
-/*export const getUserByIdService = async (userId: string) => {
+export const getUserByIdService = async (userId: string) => {
     try {
         const user = await User.findById(userId).select('-clave');
         if (!user) {
@@ -55,7 +55,7 @@ export const createUserService = async (nombre: string, correo: string, clave: s
     } catch (error) {
         throw new Error('Error al obtener usuario por ID: ' + (error as Error).message);
     }
-};*/
+};
 
 // Actualizar un usuario
 export const updateUserService = async (userId: string, updateData: Partial<IUser>) => {
