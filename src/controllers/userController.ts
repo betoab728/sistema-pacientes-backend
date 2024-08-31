@@ -3,8 +3,8 @@ import {
     getUsersService,
     createUserService,
     updateUserService,
-    loginUserService,
-    getUserByIdService
+    loginUserService
+   // ,getUserByIdService
 } from '../services/userService';
 
 // Obtener todos los usuarios
@@ -43,7 +43,7 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 // Obtener un usuario por ID
-export const getUserById = async (req: Request, res: Response) => {
+/*export const getUserById = async (req: Request, res: Response) => {
     
     console.log("Solicitud recibida en getUserById con ID:", req.params.id);
     const { id } = req.params;
@@ -58,7 +58,7 @@ export const getUserById = async (req: Request, res: Response) => {
             res.status(404).json({ message: 'User not found' });
         }
     }
-};
+};*/
 
 // Actualizar un usuario existente
 export const updateUser = async (req: Request, res: Response) => {

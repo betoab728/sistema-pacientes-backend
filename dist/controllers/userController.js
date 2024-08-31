@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.updateUser = exports.getUserById = exports.createUser = exports.getUsers = void 0;
+exports.loginUser = exports.updateUser = exports.createUser = exports.getUsers = void 0;
 const userService_1 = require("../services/userService");
 // Obtener todos los usuarios
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,23 +48,22 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.createUser = createUser;
 // Obtener un usuario por ID
-const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+/*export const getUserById = async (req: Request, res: Response) => {
+    
     console.log("Solicitud recibida en getUserById con ID:", req.params.id);
     const { id } = req.params;
+
     try {
-        const user = yield (0, userService_1.getUserByIdService)(id);
+        const user = await getUserByIdService(id);
         res.status(200).json(user); // 200 OK
-    }
-    catch (error) {
+    } catch (error) {
         if (error instanceof Error) {
             res.status(404).json({ message: 'User not found: ' + error.message });
-        }
-        else {
+        } else {
             res.status(404).json({ message: 'User not found' });
         }
     }
-});
-exports.getUserById = getUserById;
+};*/
 // Actualizar un usuario existente
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
