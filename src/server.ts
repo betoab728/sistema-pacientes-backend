@@ -9,6 +9,8 @@ import appointmentRoutes from './routes/appointmentRoutes';
 import dbConnection from './config/db';
 //para las historias clinicas
 import clinicalHistoryRoutes from './routes/clinicalHistoryRoutes';
+//ruta de dashboard
+import dashboardRoutes from './routes/dashboardRoutes';
 
 dotenv.config();
 
@@ -56,6 +58,8 @@ class Server {
         this.app.use('/appointments', appointmentRoutes);      // Para citas
         //ruta para historias clinicas
         this.app.use('/clinicalHistories', clinicalHistoryRoutes);
+        //ruta para dashboard
+        this.app.use('/dashboard', dashboardRoutes);
     }
 
     async database() {

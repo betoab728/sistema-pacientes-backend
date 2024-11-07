@@ -23,6 +23,8 @@ const appointmentRoutes_1 = __importDefault(require("./routes/appointmentRoutes"
 const db_1 = __importDefault(require("./config/db"));
 //para las historias clinicas
 const clinicalHistoryRoutes_1 = __importDefault(require("./routes/clinicalHistoryRoutes"));
+//ruta de dashboard
+const dashboardRoutes_1 = __importDefault(require("./routes/dashboardRoutes"));
 dotenv_1.default.config();
 class Server {
     constructor() {
@@ -59,6 +61,8 @@ class Server {
         this.app.use('/appointments', appointmentRoutes_1.default); // Para citas
         //ruta para historias clinicas
         this.app.use('/clinicalHistories', clinicalHistoryRoutes_1.default);
+        //ruta para dashboard
+        this.app.use('/dashboard', dashboardRoutes_1.default);
     }
     database() {
         return __awaiter(this, void 0, void 0, function* () {
