@@ -18,19 +18,18 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const dbConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     const mongoURI = process.env.MONGODB_URI;
-    console.log('MONGODB_URI:', process.env.MONGODB_URI);
+    console.log('MONGODB_URI:', mongoURI); // Log para verificar la URI
     if (!mongoURI) {
         console.error('MONGODB_URI no está configurada en el entorno.');
-        process.exit(1); // Terminar el proceso si no está configurado
+        return; // No cerrar la aplicación para permitir inspección
     }
     try {
-        //await mongoose.connect(process.env.MONGODB_URI || '', {});
         yield mongoose_1.default.connect(mongoURI);
         console.log('Database connected');
     }
     catch (error) {
-        console.log(error);
-        process.exit(1);
+        console.error('Full error:', error);
+        // No cerrar la aplicación aquí
     }
 });
 exports.default = dbConnection;
