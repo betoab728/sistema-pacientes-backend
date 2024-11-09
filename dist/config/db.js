@@ -17,13 +17,19 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const dbConnection = () => __awaiter(void 0, void 0, void 0, function* () {
+    const mongoURI = process.env.MONGODB_URI;
+    if (!mongoURI) {
+        console.error('MONGODB_URI no está configurada en el entorno.');
+        process.exit(1); // Terminar el proceso si no está configurado
+    }
     try {
-        yield mongoose_1.default.connect(process.env.MONGODB_URI || '', {});
+        //await mongoose.connect(process.env.MONGODB_URI || '', {});
+        yield mongoose_1.default.connect(mongoURI);
         console.log('Database connected');
     }
     catch (error) {
         console.log(error);
-        throw new Error('Error connecting to database');
+        process.exit(1);
     }
 });
 exports.default = dbConnection;
