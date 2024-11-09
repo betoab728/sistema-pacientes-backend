@@ -8,6 +8,8 @@ const dbConnection = async () => {
 
     const mongoURI = process.env.MONGODB_URI;
 
+    console.log('MONGODB_URI:', process.env.MONGODB_URI);
+
     if (!mongoURI) {
         console.error('MONGODB_URI no está configurada en el entorno.');
         process.exit(1); // Terminar el proceso si no está configurado
