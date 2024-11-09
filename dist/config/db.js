@@ -18,6 +18,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const dbConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     const mongoURI = process.env.MONGODB_URI;
+    console.log('MONGODB_URI:', process.env.MONGODB_URI);
     if (!mongoURI) {
         console.error('MONGODB_URI no está configurada en el entorno.');
         process.exit(1); // Terminar el proceso si no está configurado
