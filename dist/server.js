@@ -41,6 +41,8 @@ class Server {
         });
     }
     middleware() {
+        // Indicar a Express que confíe en el proxy (Nginx en este caso)
+        this.app.set('trust proxy', true);
         // Parseando el body de la petición
         this.app.use(express_1.default.json());
         // Habilitar CORS
