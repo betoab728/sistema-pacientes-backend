@@ -7,15 +7,18 @@ import { getAppointments, getAppointmentById, createAppointment, updateAppointme
     ,getAppointmentsReport
   } from '../controllers/appointmentController';
 
+import { validarJWT } from '../middlewares/validarJWT';
+
 const router = Router();
 
-router.get('/', getAppointments);
-router.post('/', createAppointment);
-router.get('/:id', getAppointmentById);
-router.put('/:id', updateAppointment);
-router.put('/status/:id', updateAppointmentStatus);
-router.get('/date/:from/:to', getAppointmentsByDate);
-router.get('/report/:from/:to', getAppointmentsReport);
+// Protegemos todas las rutas con el middleware validarJWT
+router.get('/', validarJWT, getAppointments);
+router.post('/', validarJWT, createAppointment);
+router.get('/:id', validarJWT, getAppointmentById);
+router.put('/:id', validarJWT, updateAppointment);
+router.put('/status/:id', validarJWT, updateAppointmentStatus);
+router.get('/date/:from/:to', validarJWT, getAppointmentsByDate);
+router.get('/report/:from/:to', validarJWT, getAppointmentsReport);
 
 
 export default router;

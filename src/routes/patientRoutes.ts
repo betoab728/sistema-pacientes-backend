@@ -12,28 +12,20 @@ import {
     getPatientsByMaternalSurname,
     getPatientsByDni
 } from '../controllers/patientController';
+import { validarJWT } from '../middlewares/validarJWT';
 
-/**
- * @openapi
- * /pacientes:
- *   get:
- *     summary: Obtiene todos los pacientes
- *     responses:
- *       200:
- *         description: Lista de pacientes.
- */
 
 const router = Router();
 
-router.get('/', getPatients);
-router.post('/', createPatient);
-router.get('/:id', getPatientById);
-router.put('/:id', updatePatient);
-router.delete('/:id', deletePatient);
-router.get('/job/:jobId', getPatientsByJob);
-router.get('/name/:name', getPatientsByName);
-router.get('/paternalSurname/:paternalSurname', getPatientsByPaternalSurname);
-router.get('/maternalSurname/:maternalSurname', getPatientsByMaternalSurname);
-router.get('/dni/:dni', getPatientsByDni);
+router.get('/', validarJWT, getPatients);
+router.post('/', validarJWT, createPatient);
+router.get('/:id', validarJWT, getPatientById);
+router.put('/:id', validarJWT, updatePatient);
+router.delete('/:id', validarJWT, deletePatient);
+router.get('/job/:jobId', validarJWT, getPatientsByJob);
+router.get('/name/:name', validarJWT, getPatientsByName);
+router.get('/paternalSurname/:paternalSurname', validarJWT, getPatientsByPaternalSurname);
+router.get('/maternalSurname/:maternalSurname', validarJWT, getPatientsByMaternalSurname);
+router.get('/dni/:dni', validarJWT, getPatientsByDni);
 
 export default router;

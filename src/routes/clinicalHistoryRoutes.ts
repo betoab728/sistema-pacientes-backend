@@ -9,14 +9,15 @@ import {
     deleteClinicalHistory,
     getClinicalHistoriesByPatientId
 } from '../controllers/clinicalHistoryController';
+import { validarJWT } from '../middlewares/validarJWT';
 
 const router = Router();
 
-router.get('/', getClinicalHistories);
-router.post('/', createClinicalHistory);
-router.get('/:id', getClinicalHistoryById);
-router.put('/:id', updateClinicalHistory);
-router.delete('/:id', deleteClinicalHistory);
-router.get('/patient/:patientId', getClinicalHistoriesByPatientId);
+router.get('/', validarJWT, getClinicalHistories);
+router.post('/', validarJWT, createClinicalHistory);
+router.get('/:id', validarJWT, getClinicalHistoryById);
+router.put('/:id', validarJWT, updateClinicalHistory);
+router.delete('/:id', validarJWT, deleteClinicalHistory);
+router.get('/patient/:patientId', validarJWT, getClinicalHistoriesByPatientId);
 
 export default router;

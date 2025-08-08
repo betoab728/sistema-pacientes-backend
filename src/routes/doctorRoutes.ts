@@ -11,13 +11,14 @@ import {
 } from '../controllers/doctorController';
 
 const router = Router();
+import { validarJWT } from '../middlewares/validarJWT';
 
-router.get('/', getDoctors);
-router.post('/', createDoctor);
-router.get('/:id', getDoctorById);
-router.put('/:id', updateDoctor);
-router.delete('/:id', deleteDoctor);
-router.get('/name/:name', getDoctorsByName);
-router.get('/dni/:dni', getDoctorsByDni);
+router.get('/', validarJWT, getDoctors);
+router.post('/', validarJWT, createDoctor);
+router.get('/:id', validarJWT, getDoctorById);
+router.put('/:id', validarJWT, updateDoctor);
+router.delete('/:id', validarJWT, deleteDoctor);
+router.get('/name/:name', validarJWT, getDoctorsByName);
+router.get('/dni/:dni', validarJWT, getDoctorsByDni);
 
 export default router;
