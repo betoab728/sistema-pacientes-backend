@@ -3,6 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // se implementa las rutas de la colección de pacientes que se registraran en la base de datos
 const express_1 = require("express");
 const patientController_1 = require("../controllers/patientController");
+/**
+ * @openapi
+ * /pacientes:
+ *   get:
+ *     summary: Obtiene todos los pacientes
+ *     responses:
+ *       200:
+ *         description: Lista de pacientes.
+ */
 const router = (0, express_1.Router)();
 router.get('/', patientController_1.getPatients);
 router.post('/', patientController_1.createPatient);

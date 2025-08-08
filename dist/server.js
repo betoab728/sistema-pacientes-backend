@@ -25,6 +25,9 @@ const db_1 = __importDefault(require("./config/db"));
 const clinicalHistoryRoutes_1 = __importDefault(require("./routes/clinicalHistoryRoutes"));
 //ruta de dashboard
 const dashboardRoutes_1 = __importDefault(require("./routes/dashboardRoutes"));
+const specialtyRoutes_1 = __importDefault(require("./routes/specialtyRoutes"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_1 = require("./config/swagger");
 dotenv_1.default.config();
 class Server {
     constructor() {
@@ -55,16 +58,19 @@ class Server {
             });
         });
         // Rutas
-        this.app.use('/usuarios', userRoutes_1.default); // Para usuarios
+        this.app.use('/users', userRoutes_1.default); // Para usuarios
         //ruta para trabajos o jobs
         this.app.use('/jobs', jobRoutes_1.default);
         this.app.use('/patients', patientRoutes_1.default); // Para pacientes
         this.app.use('/doctors', doctorRoutes_1.default); // Para médicos
         this.app.use('/appointments', appointmentRoutes_1.default); // Para citas
         //ruta para historias clinicas
-        this.app.use('/clinicalHistories', clinicalHistoryRoutes_1.default);
+        this.app.use('/clinical-histories', clinicalHistoryRoutes_1.default);
         //ruta para dashboard
         this.app.use('/dashboard', dashboardRoutes_1.default);
+        this.app.use('/specialties', specialtyRoutes_1.default);
+        // Documentación Swagger
+        this.app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.swaggerDocs));
     }
     database() {
         return __awaiter(this, void 0, void 0, function* () {

@@ -13,6 +13,16 @@ import {
     getPatientsByDni
 } from '../controllers/patientController';
 
+/**
+ * @openapi
+ * /pacientes:
+ *   get:
+ *     summary: Obtiene todos los pacientes
+ *     responses:
+ *       200:
+ *         description: Lista de pacientes.
+ */
+
 const router = Router();
 
 router.get('/', getPatients);

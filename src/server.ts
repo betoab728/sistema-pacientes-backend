@@ -11,6 +11,9 @@ import dbConnection from './config/db';
 import clinicalHistoryRoutes from './routes/clinicalHistoryRoutes';
 //ruta de dashboard
 import dashboardRoutes from './routes/dashboardRoutes';
+import specialtyRoutes from './routes/specialtyRoutes';
+import swaggerUi from "swagger-ui-express";
+import { swaggerDocs } from "./config/swagger";
 
 dotenv.config();
 
@@ -52,16 +55,19 @@ class Server {
         });
 
         // Rutas
-        this.app.use('/usuarios', userRoutes);// Para usuarios
+        this.app.use('/users', userRoutes);// Para usuarios
         //ruta para trabajos o jobs
         this.app.use('/jobs', jobRoutes); 
         this.app.use('/patients', patientRoutes);  // Para pacientes
         this.app.use('/doctors', doctorRoutes);      // Para médicos
         this.app.use('/appointments', appointmentRoutes);      // Para citas
         //ruta para historias clinicas
-        this.app.use('/clinicalHistories', clinicalHistoryRoutes);
+        this.app.use('/clinical-histories', clinicalHistoryRoutes);
         //ruta para dashboard
         this.app.use('/dashboard', dashboardRoutes);
+        this.app.use('/specialties', specialtyRoutes);
+        // Documentación Swagger
+        this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
     }
 
     async database() {
