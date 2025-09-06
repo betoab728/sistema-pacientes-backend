@@ -88,27 +88,23 @@ export const updateUserService = async (userId: string, updateData: Partial<IUse
 };
 // Login de usuario
 export const loginUserService = async (correo: string, clave: string) => {
-    try {
-        const user = await User.findOne({ correo });
+    const user = await User.findOne({ correo });
 
-        if (!user) {
-            throw new Error('Correo no válido');
-        }
-
-        const isMatch = await user.matchPassword(clave);
-
-        if (isMatch) {
-            return {
-                message: 'Usuario autenticado correctamente',
-                _id: user._id,
-                nombre: user.nombre,
-                correo: user.correo,
-                token: generateToken(user._id as string)
-            };
-        } else {
-            throw new Error('Clave no válida');
-        }
-    } catch (error) {
-        throw new Error('Error en el login de usuario: ' + (error as Error).message);
+    if (!user) {
+        throw new Error('Correo no válido');
     }
+
+    const isMatch = await user.matchPassword(clave);
+
+    if (!isMatch) {
+        throw new Error('Clave no válida');
+    }
+
+    return {
+        message: 'Usuario autenticado correctamente',
+        _id: user._id,
+        nombre: user.nombre,
+        correo: user.correo,
+        token: generateToken(user._id as string)
+    };
 };

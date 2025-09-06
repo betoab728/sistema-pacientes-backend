@@ -96,27 +96,20 @@ const updateUserService = (userId, updateData) => __awaiter(void 0, void 0, void
 exports.updateUserService = updateUserService;
 // Login de usuario
 const loginUserService = (correo, clave) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const user = yield userModel_1.default.findOne({ correo });
-        if (!user) {
-            throw new Error('Correo no válido');
-        }
-        const isMatch = yield user.matchPassword(clave);
-        if (isMatch) {
-            return {
-                message: 'Usuario autenticado correctamente',
-                _id: user._id,
-                nombre: user.nombre,
-                correo: user.correo,
-                token: (0, jwt_1.default)(user._id)
-            };
-        }
-        else {
-            throw new Error('Clave no válida');
-        }
+    const user = yield userModel_1.default.findOne({ correo });
+    if (!user) {
+        throw new Error('Correo no válido');
     }
-    catch (error) {
-        throw new Error('Error en el login de usuario: ' + error.message);
+    const isMatch = yield user.matchPassword(clave);
+    if (!isMatch) {
+        throw new Error('Clave no válida');
     }
+    return {
+        message: 'Usuario autenticado correctamente',
+        _id: user._id,
+        nombre: user.nombre,
+        correo: user.correo,
+        token: (0, jwt_1.default)(user._id)
+    };
 });
 exports.loginUserService = loginUserService;

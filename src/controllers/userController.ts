@@ -79,7 +79,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 // Iniciar sesión de usuario
 export const loginUser = async (req: Request, res: Response) => {
-    console.log("Solicitud recibida en loginUser con datos:", req.body);
+    console.log("Solicitud recibida en loginUser con datos:", req.body);    
     const { correo, clave } = req.body;
 
     try {
@@ -88,7 +88,7 @@ export const loginUser = async (req: Request, res: Response) => {
     } catch (error: any) {
          // Manejar errores específicos
          if (error.message === 'Correo no válido') {
-            res.status(404).json({ message: 'Correo no encontrado' });
+            res.status(401).json({ message: 'Correo no encontrado' });
         } else if (error.message === 'Clave no válida') {
             res.status(401).json({ message: 'Clave incorrecta' });
         } else {

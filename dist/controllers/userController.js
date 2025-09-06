@@ -94,7 +94,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (error) {
         // Manejar errores específicos
         if (error.message === 'Correo no válido') {
-            res.status(404).json({ message: 'Correo no encontrado' });
+            res.status(401).json({ message: 'Correo no encontrado' });
         }
         else if (error.message === 'Clave no válida') {
             res.status(401).json({ message: 'Clave incorrecta' });
