@@ -1,6 +1,7 @@
 //se implementa el servicio para la colección de pacientes que se registraran en la base de datos
 import { IPatient } from '../models/patientModel';
 import Patient from '../models/patientModel';
+import { Appointment,IAppointment  } from '../models/appointmentModel';
     //Obtener todos los pacientes
     export const getPatientsService = async () => {
         try {
@@ -116,6 +117,40 @@ import Patient from '../models/patientModel';
             throw new Error('Error al obtener pacientes por dni: ' + (error as Error).message);
         }
     }
+
+    //Listar las citas medicas por paciente
+export const getAppointmentsByPatientService = async (patientId: string) => {
+    try {
+        const appointments = await Appointment.find({ patientID: patientId })
+            .populate('patientID', 'name paternalSurname maternalSurname') 
+            .populate('doctorID', 'name paternalSurname maternalSurname');
+
+        return appointments.map(appointment => {
+            const patient = appointment.patientID as any;
+            const doctor = appointment.doctorID as any;
+
+            return {
+                _id: appointment._id,
+                date: appointment.date,
+                hour: appointment.hour,
+                patientFullName: patient 
+                    ? `${patient.name} ${patient.paternalSurname} ${patient.maternalSurname}`
+                    : 'N/A',
+                doctorFullName: doctor 
+                    ? `${doctor.name} ${doctor.paternalSurname} ${doctor.maternalSurname}`
+                    : 'N/A',
+                office: appointment.office,
+                status: appointment.status,
+            };
+        });
+    } catch (error) {
+        throw new Error(
+            'Error al obtener citas médicas por paciente: ' + (error as Error).message
+        );
+    }
+};
+
+
     // fin de la implementacion de los servicios para gestionar los pacientes
 
 

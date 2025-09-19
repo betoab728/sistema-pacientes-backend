@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPatientsByDni = exports.getPatientsByMaternalSurname = exports.getPatientsByPaternalSurname = exports.getPatientsByName = exports.getPatientsByJob = exports.deletePatient = exports.updatePatient = exports.getPatientById = exports.createPatient = exports.getPatients = void 0;
+exports.getAppointmentsByPatient = exports.getPatientsByDni = exports.getPatientsByMaternalSurname = exports.getPatientsByPaternalSurname = exports.getPatientsByName = exports.getPatientsByJob = exports.deletePatient = exports.updatePatient = exports.getPatientById = exports.createPatient = exports.getPatients = void 0;
 const patientService_1 = require("../services/patientService");
 //Obtener todos los pacientes
 const getPatients = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -183,4 +183,19 @@ const getPatientsByDni = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.getPatientsByDni = getPatientsByDni;
+// Obtener citas médicas por paciente
+const getAppointmentsByPatient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { patientId } = req.params;
+        const appointments = yield (0, patientService_1.getAppointmentsByPatientService)(patientId);
+        if (appointments.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron citas para este paciente' });
+        }
+        res.status(200).json(appointments);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error al obtener citas médicas por paciente' });
+    }
+});
+exports.getAppointmentsByPatient = getAppointmentsByPatient;
 // fin de la implementacion de los controladores para gestionar los pacientes

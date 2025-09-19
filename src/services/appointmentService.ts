@@ -132,3 +132,4 @@ export const getAppointmentsByDateService = async (from: Date, to: Date) => {
         throw new Error('Error al obtener citas medicas por fecha: ' + (error as Error).message);
     }
 }
+

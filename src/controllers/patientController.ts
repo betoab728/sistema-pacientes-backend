@@ -6,7 +6,8 @@
     getPatientsByNameService,
     getPatientsByPaternalSurnameService,
     getPatientsByMaternalSurnameService,
-    getPatientsByDniService
+    getPatientsByDniService,
+    getAppointmentsByPatientService
   } from '../services/patientService';
 //Obtener todos los pacientes
 export const getPatients = async (req: Request, res: Response) => {
@@ -149,6 +150,22 @@ export const getPatientsByDni = async (req: Request, res: Response) => {
         } else {
             res.status(404).json({ message: 'Pacientes no encontrados' });
         }
+    }
+};
+
+// Obtener citas médicas por paciente
+export const getAppointmentsByPatient = async (req: Request, res: Response) => {
+    try {
+        const { patientId } = req.params;
+        const appointments = await getAppointmentsByPatientService(patientId);
+
+        if (appointments.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron citas para este paciente' });
+        }
+
+        res.status(200).json(appointments);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener citas médicas por paciente' });
     }
 };
 

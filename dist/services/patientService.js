@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPatientsByDniService = exports.getPatientsByMaternalSurnameService = exports.getPatientsByPaternalSurnameService = exports.getPatientsByNameService = exports.getPatientsByJobService = exports.deletePatientService = exports.updatePatientService = exports.getPatientByIdService = exports.createPatientService = exports.getPatientsService = void 0;
+exports.getAppointmentsByPatientService = exports.getPatientsByDniService = exports.getPatientsByMaternalSurnameService = exports.getPatientsByPaternalSurnameService = exports.getPatientsByNameService = exports.getPatientsByJobService = exports.deletePatientService = exports.updatePatientService = exports.getPatientByIdService = exports.createPatientService = exports.getPatientsService = void 0;
 const patientModel_1 = __importDefault(require("../models/patientModel"));
+const appointmentModel_1 = require("../models/appointmentModel");
 //Obtener todos los pacientes
 const getPatientsService = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -149,4 +150,33 @@ const getPatientsByDniService = (dni) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getPatientsByDniService = getPatientsByDniService;
+//Listar las citas medicas por paciente
+const getAppointmentsByPatientService = (patientId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const appointments = yield appointmentModel_1.Appointment.find({ patientID: patientId })
+            .populate('patientID', 'name paternalSurname maternalSurname')
+            .populate('doctorID', 'name paternalSurname maternalSurname');
+        return appointments.map(appointment => {
+            const patient = appointment.patientID;
+            const doctor = appointment.doctorID;
+            return {
+                _id: appointment._id,
+                date: appointment.date,
+                hour: appointment.hour,
+                patientFullName: patient
+                    ? `${patient.name} ${patient.paternalSurname} ${patient.maternalSurname}`
+                    : 'N/A',
+                doctorFullName: doctor
+                    ? `${doctor.name} ${doctor.paternalSurname} ${doctor.maternalSurname}`
+                    : 'N/A',
+                office: appointment.office,
+                status: appointment.status,
+            };
+        });
+    }
+    catch (error) {
+        throw new Error('Error al obtener citas médicas por paciente: ' + error.message);
+    }
+});
+exports.getAppointmentsByPatientService = getAppointmentsByPatientService;
 // fin de la implementacion de los servicios para gestionar los pacientes

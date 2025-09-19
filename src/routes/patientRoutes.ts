@@ -10,22 +10,24 @@ import {
     getPatientsByName,
     getPatientsByPaternalSurname,
     getPatientsByMaternalSurname,
-    getPatientsByDni
+    getPatientsByDni,
+    getAppointmentsByPatient
 } from '../controllers/patientController';
 import { validarJWT } from '../middlewares/validarJWT';
 
-
 const router = Router();
 
-router.get('/', validarJWT, getPatients);
-router.post('/', validarJWT, createPatient);
-router.get('/:id', validarJWT, getPatientById);
-router.put('/:id', validarJWT, updatePatient);
-router.delete('/:id', validarJWT, deletePatient);
+// Rutas específicas primero
 router.get('/job/:jobId', validarJWT, getPatientsByJob);
 router.get('/name/:name', validarJWT, getPatientsByName);
 router.get('/paternalSurname/:paternalSurname', validarJWT, getPatientsByPaternalSurname);
 router.get('/maternalSurname/:maternalSurname', validarJWT, getPatientsByMaternalSurname);
 router.get('/dni/:dni', validarJWT, getPatientsByDni);
+router.get('/:patientId/appointments', validarJWT, getAppointmentsByPatient);
+
+// Ruta genérica al final
+router.get('/:id', validarJWT, getPatientById);
+router.put('/:id', validarJWT, updatePatient);
+router.delete('/:id', validarJWT, deletePatient);
 
 export default router;

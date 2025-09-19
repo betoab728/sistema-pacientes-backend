@@ -2,10 +2,9 @@
 //importar los servicios de citas medicas
 import { Request, Response } from 'express';
 import { generateAppointmentsReportPDF } from '../services/appointmentReportService';
-
-
 import { getAppointmentsService, getAppointmentByIdService, createAppointmentService, updateAppointmentService,
-     deleteAppointmentService, getAppointmentsByDateService,updateAppointmentStatusService } from '../services/appointmentService';
+     deleteAppointmentService, getAppointmentsByDateService
+     ,updateAppointmentStatusService  } from '../services/appointmentService';
 
 //obtener todas las citas medicas
 export const getAppointments = async (req: Request, res: Response) => {
@@ -132,7 +131,8 @@ export const getAppointmentsReport = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).send('Error al generar el informe: ' + (error as Error).message);
     }
-};
+}; 
+
 
 
 
