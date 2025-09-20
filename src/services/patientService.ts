@@ -119,28 +119,44 @@ import { Appointment,IAppointment  } from '../models/appointmentModel';
     }
 
     //Listar las citas medicas por paciente
+// Listar las citas médicas por paciente
 export const getAppointmentsByPatientService = async (patientId: string) => {
     try {
         const appointments = await Appointment.find({ patientID: patientId })
-            .populate('patientID', 'name paternalSurname maternalSurname') 
-            .populate('doctorID', 'name paternalSurname maternalSurname');
+            .populate('patientID', 'name paternalSurname maternalSurname')
+            .populate({
+                path: 'doctorID',
+                select: 'name paternalSurname maternalSurname specialtyID',
+                populate: {
+                    path: 'specialtyID',
+                    select: 'specialty'
+                }
+            });
 
         return appointments.map(appointment => {
             const patient = appointment.patientID as any;
             const doctor = appointment.doctorID as any;
 
+            // Formato de fecha "dd/MM/yyyy"
+            const fechaFormateada = new Date(appointment.date).toLocaleDateString('es-PE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+
             return {
-                _id: appointment._id,
-                date: appointment.date,
-                hour: appointment.hour,
-                patientFullName: patient 
+                id: appointment._id, // 👈 cambiado de _id → id
+                fecha: fechaFormateada,
+                hora: appointment.hour,
+                paciente: patient 
                     ? `${patient.name} ${patient.paternalSurname} ${patient.maternalSurname}`
                     : 'N/A',
-                doctorFullName: doctor 
+                doctor: doctor 
                     ? `${doctor.name} ${doctor.paternalSurname} ${doctor.maternalSurname}`
                     : 'N/A',
-                office: appointment.office,
-                status: appointment.status,
+                consultorio: appointment.office,
+                estado: appointment.status,
+                especialidad: doctor?.specialtyID?.specialty || 'N/A'
             };
         });
     } catch (error) {
@@ -149,6 +165,8 @@ export const getAppointmentsByPatientService = async (patientId: string) => {
         );
     }
 };
+
+
 
 
     // fin de la implementacion de los servicios para gestionar los pacientes

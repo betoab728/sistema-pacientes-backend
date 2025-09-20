@@ -22,6 +22,7 @@ export interface IDoctor extends mongoose.Document {
     email: string;
     phone: string;
     medicalSchool: string;
+    specialtyID: mongoose.Types.ObjectId;
 }
 //definir el esquema de doctor
 const DoctorSchema = new mongoose.Schema<IDoctor>({
@@ -64,6 +65,11 @@ const DoctorSchema = new mongoose.Schema<IDoctor>({
     },
     medicalSchool: {
         type: String,
+        required: true
+    },
+    specialtyID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Specialty',
         required: true
     }
 } //se considera timestamp para el registro de la fecha de creacion y actualizacion de los registros

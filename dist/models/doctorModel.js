@@ -58,6 +58,11 @@ const DoctorSchema = new mongoose_1.default.Schema({
     medicalSchool: {
         type: String,
         required: true
+    },
+    specialtyID: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: 'Specialty',
+        required: true
     }
 } //se considera timestamp para el registro de la fecha de creacion y actualizacion de los registros
 , {

@@ -151,26 +151,42 @@ const getPatientsByDniService = (dni) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getPatientsByDniService = getPatientsByDniService;
 //Listar las citas medicas por paciente
+// Listar las citas médicas por paciente
 const getAppointmentsByPatientService = (patientId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const appointments = yield appointmentModel_1.Appointment.find({ patientID: patientId })
             .populate('patientID', 'name paternalSurname maternalSurname')
-            .populate('doctorID', 'name paternalSurname maternalSurname');
+            .populate({
+            path: 'doctorID',
+            select: 'name paternalSurname maternalSurname specialtyID',
+            populate: {
+                path: 'specialtyID',
+                select: 'specialty'
+            }
+        });
         return appointments.map(appointment => {
+            var _a;
             const patient = appointment.patientID;
             const doctor = appointment.doctorID;
+            // Formato de fecha "dd/MM/yyyy"
+            const fechaFormateada = new Date(appointment.date).toLocaleDateString('es-PE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
             return {
-                _id: appointment._id,
-                date: appointment.date,
-                hour: appointment.hour,
-                patientFullName: patient
+                id: appointment._id, // 👈 cambiado de _id → id
+                fecha: fechaFormateada,
+                hora: appointment.hour,
+                paciente: patient
                     ? `${patient.name} ${patient.paternalSurname} ${patient.maternalSurname}`
                     : 'N/A',
-                doctorFullName: doctor
+                doctor: doctor
                     ? `${doctor.name} ${doctor.paternalSurname} ${doctor.maternalSurname}`
                     : 'N/A',
-                office: appointment.office,
-                status: appointment.status,
+                consultorio: appointment.office,
+                estado: appointment.status,
+                especialidad: ((_a = doctor === null || doctor === void 0 ? void 0 : doctor.specialtyID) === null || _a === void 0 ? void 0 : _a.specialty) || 'N/A'
             };
         });
     }
